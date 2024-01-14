@@ -4,9 +4,10 @@ import { Card, Title, Appbar, BottomNavigation } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { LineChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native'
-import WelcomeScreen from './WelcomeScreen';
+import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 
-const HomeScreen = () => {
+const GoatScreen = () => {
+  const navigation = useNavigation();
 
   const iconsData = [
     { name: 'attach-money', label: 'Finance' },
@@ -45,34 +46,21 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.profileImage}>
-          <Text style={styles.profileInitials}>{username.charAt(0)}</Text>
+      <View style={styles.greenCard}>
+        <View className="flex-row justify-start">
+          <TouchableOpacity onPress={()=> navigation.goBack()} 
+          className="bg-green-500 p-2 rounded-tr-2xl rounded-bl-2xl ml-4">
+            <ArrowLeftIcon size="20" color="black" />
+          </TouchableOpacity>
         </View>
-        <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Hi, {username}</Text>
-        </View>
-        <View style={styles.appbarIcons}>
-          <Icon name="notifications" size={26} color="#00695C" onPress={() => { /* Handle notification press */ }} style={styles.iconSpacing}/>
-          <Icon name="search" size={26} color="#00695C" onPress={() => { /* Handle search press */ }} />
-        </View>
+        <Text style={styles.headerTitle}>Goat</Text>
+
       </View>
 
       
-      <View style={styles.card}>
-          <View style={styles.iconContainer}>
-            {iconsData.slice(0, 3).map((icon, index) => (
-              <View key={index} style={styles.iconWrapper}>
-                <View style={styles.iconBackground}>
-                  <Icon name={icon.name} size={30} color="#00695C" />
-                </View>
-                <Text style={styles.iconText}>{icon.label}</Text>
-              </View>
-            ))}
-          </View>
-      </View>
+      
 
-      <View style={styles.card}>
+      <View style={[styles.card, styles.secondCard]}>
         <View style={styles.iconContainer}>
           {iconsData.slice(3).map((icon, index) => (
             <View key={index} style={styles.iconWrapper}>
@@ -114,6 +102,18 @@ const styles = StyleSheet.create({
     padding: 8, // Add padding
     borderRadius: 8, // Optional: Add border radius
   },
+  secondCard: {
+    marginTop: 72, // Add margin to the top of the second card
+  },
+  greenCard: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#00695C',
+    padding: 20,
+    alignItems: 'flex-start',
+  },
   iconContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -147,6 +147,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 38,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center', // Center the text
+    width: '100%', // Ensure the text takes up the full width
+
   },
   profileImage: {
     width: 40,
@@ -189,4 +197,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default HomeScreen;
+export default GoatScreen;

@@ -1,20 +1,66 @@
-import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
-import React from 'react'
-import { themeColors } from '../theme'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import {ArrowLeftIcon} from 'react-native-heroicons/solid';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Image, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { themeColors } from '../theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
+
 
 // subscribe for more videos like this :)
 export default function SignUpScreen() {
+
     const navigation = useNavigation();
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSignUp = async () => {
+        try {
+
+            const baseURLDev = "http://192.168.34.91:5000"
+            // const baseURLDev = "http://192.168.192.91:19000"
+
+          setLoading(true); // Set loading to true when starting the signup process
+    
+          const response = await fetch(`${baseURLDev}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              username,
+              email,
+              password,
+            }),
+          });
+    
+          const data = await response.json();
+    
+          if (data.success) {
+            // Registration successful, you can handle the success scenario here
+            Alert.alert('Success', data.data.message);
+            // Navigate to another screen or perform any action you need
+            navigation.navigate('Login'); // replace 'Home' with the screen you want to navigate to
+          } else {
+            // Handle the case when registration fails
+            Alert.alert('Error', data.data.message);
+          }
+        } catch (error) {
+          // Handle any network or server errors
+          console.error('Error during signup:', error);
+        } finally {
+          setLoading(false); // Set loading back to false when the signup process is complete
+        }
+      };
+
   return (
     <View className="flex-1 bg-white" style={{backgroundColor: themeColors.bg}}>
       <SafeAreaView className="flex">
         <View className="flex-row justify-start">
             <TouchableOpacity 
                 onPress={()=> navigation.goBack()}
-                className="bg-yellow-400 p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
+                className="bg-green-500 p-2 rounded-tr-2xl rounded-bl-2xl ml-4"
             >
                 <ArrowLeftIcon size="20" color="black" />
             </TouchableOpacity>
@@ -28,32 +74,37 @@ export default function SignUpScreen() {
         style={{borderTopLeftRadius: 50, borderTopRightRadius: 50}}
       >
         <View className="form space-y-2">
-            <Text className="text-gray-700 ml-4">Full Name</Text>
+            <Text className="text-gray-700 ml-4">Username</Text>
             <TextInput
                 className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-                value="john snow"
-                placeholder='Enter Name'
+                value={username}
+                onChangeText={(text) => setUsername(text)}
+                placeholder='Enter username'
             />
             <Text className="text-gray-700 ml-4">Email Address</Text>
             <TextInput
                 className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-                value="john@gmail.com"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
                 placeholder='Enter Email'
             />
             <Text className="text-gray-700 ml-4">Password</Text>
             <TextInput
                 className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-7"
                 secureTextEntry
-                value="test12345"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
                 placeholder='Enter Password'
             />
-            <TouchableOpacity
-                className="py-3 bg-yellow-400 rounded-xl"
-            >
-                <Text className="font-xl font-bold text-center text-gray-700">
-                    Sign Up
-                </Text>
-            </TouchableOpacity>
+            {loading ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="yellow" />
+                </View>
+            ) : (
+                <TouchableOpacity onPress={handleSignUp} className="py-3 bg-greenbg-600 rounded-xl">
+                <Text className="font-xl font-bold text-center text-white">Sign Up</Text>
+                </TouchableOpacity>
+            )}
         </View>
         <Text className="text-xl text-gray-700 font-bold text-center py-5">
             Or
@@ -75,7 +126,7 @@ export default function SignUpScreen() {
         <View className="flex-row justify-center mt-7">
             <Text className="text-gray-500 font-semibold">Already have an account?</Text>
             <TouchableOpacity onPress={()=> navigation.navigate('Login')}>
-                <Text className="font-semibold text-yellow-500"> Login</Text>
+                <Text className="font-semibold text-greenbg-600"> Login</Text>
             </TouchableOpacity>
         </View>
       </View>
