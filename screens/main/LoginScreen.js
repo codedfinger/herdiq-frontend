@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {ArrowLeftIcon} from 'react-native-heroicons/solid'
-import { themeColors } from '../theme'
+import { themeColors } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -16,7 +15,7 @@ export default function LoginScreen() {
     const handleLogin = async () => {
         try {
 
-            const baseURLDev = "http://192.168.198.91:5000"
+            const baseURLDev = "http://192.168.94.91:5000"
             // const baseURLDev = "http://192.168.192.91:19000"
 
           setLoading(true); // Set loading to true when starting the signup process
@@ -38,7 +37,13 @@ export default function LoginScreen() {
             // Registration successful, you can handle the success scenario here
             // Alert.alert('Success', data.data.message);
             // Navigate to another screen or perform any action you need
-            navigation.navigate('Dashboard'); // replace 'Home' with the screen you want to navigate to
+
+            await AsyncStorage.setItem('authToken', data.data.token);
+            await AsyncStorage.setItem('userID', data.data.user._id)
+
+            console.log("user", await AsyncStorage.getItem('userID'))
+
+            navigation.navigate('Dashboard'); 
           } else {
             // Handle the case when registration fails
             Alert.alert('Error', data.error.message);
@@ -61,7 +66,7 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
         <View  className="flex-row justify-center">
-          <Image source={require('../assets/images/login.png')} 
+          <Image source={require('../../assets/images/login.png')} 
           style={{width: 200, height: 200}} />
         </View>
         
@@ -103,13 +108,13 @@ export default function LoginScreen() {
           <Text className="text-xl text-gray-700 font-bold text-center py-5">Or</Text>
           <View className="flex-row justify-center space-x-12">
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-              <Image source={require('../assets/icons/google.png')} className="w-10 h-10" />
+              <Image source={require('../../assets/icons/google.png')} className="w-10 h-10" />
             </TouchableOpacity>
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-              <Image source={require('../assets/icons/apple.png')} className="w-10 h-10" />
+              <Image source={require('../../assets/icons/apple.png')} className="w-10 h-10" />
             </TouchableOpacity>
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-              <Image source={require('../assets/icons/facebook.png')} className="w-10 h-10" />
+              <Image source={require('../../assets/icons/facebook.png')} className="w-10 h-10" />
             </TouchableOpacity>
           </View>
           <View className="flex-row justify-center mt-7">

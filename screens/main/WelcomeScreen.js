@@ -1,7 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { themeColors } from '../theme'
+import { themeColors } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 
 export default function WelcomeScreen() {
@@ -14,7 +14,7 @@ export default function WelcomeScreen() {
                 Let's Get Started!
             </Text>
             <View className="flex-row justify-center">
-                <Image source={require("../assets/images/welcome.png")}
+                <Image source={require("../../assets/images/welcome.png")}
                     style={{width: 350, height: 350}} />
             </View>
             <View className="space-y-4">

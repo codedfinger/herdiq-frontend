@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { themeColors } from '../theme';
+import { themeColors } from '../../theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
@@ -66,7 +66,7 @@ export default function SignUpScreen() {
             </TouchableOpacity>
         </View>
         <View className="flex-row justify-center">
-            <Image source={require('../assets/images/signup.png')} 
+            <Image source={require('../../assets/images/signup.png')} 
                 style={{width: 165, height: 110}} />
         </View>
       </SafeAreaView>
@@ -111,15 +111,15 @@ export default function SignUpScreen() {
         </Text>
         <View className="flex-row justify-center space-x-12">
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-                <Image source={require('../assets/icons/google.png')} 
+                <Image source={require('../../assets/icons/google.png')} 
                     className="w-10 h-10" />
             </TouchableOpacity>
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-                <Image source={require('../assets/icons/apple.png')} 
+                <Image source={require('../../assets/icons/apple.png')} 
                     className="w-10 h-10" />
             </TouchableOpacity>
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
-                <Image source={require('../assets/icons/facebook.png')} 
+                <Image source={require('../../assets/icons/facebook.png')} 
                     className="w-10 h-10" />
             </TouchableOpacity>
         </View>

@@ -3,8 +3,6 @@ import { View, StyleSheet, Text,TouchableOpacity } from 'react-native';
 import { Card, Title, Appbar, BottomNavigation } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { LineChart } from 'react-native-chart-kit';
-import { useNavigation } from '@react-navigation/native'
-import WelcomeScreen from './WelcomeScreen';
 
 const HomeScreen = () => {
 

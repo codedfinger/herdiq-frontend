@@ -5,7 +5,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native'
-import WelcomeScreen from './WelcomeScreen';
 
 const MainScreen = () => {
   const navigation = useNavigation();
@@ -17,11 +16,7 @@ const MainScreen = () => {
     { name: 'cow', type: 'MaterialCommunityIcon', label: 'Cow' },
     { name: 'history', type: 'MaterialIcon', label: 'Records' },
     { name: 'group-add', type: 'MaterialIcon', label: 'Employee' },
-    // { name: 'local-hospital', label: 'Vaccine' },
-    // { name: 'local-mall', label: 'Breedings' },
-    // { name: 'pets', label: 'Matings' },
-    // { name: 'loyalty', label: 'Tags' },
-    // { name: 'settings', label: 'Settings' },
+  
 
   ];
 
@@ -91,13 +86,13 @@ const MainScreen = () => {
         {iconsData.slice(0, 6).map((icon, index) => (
           <View key={index} style={styles.iconWrapper}>
                   <TouchableOpacity
-        key={index}
-        onPress={() => navigation.navigate(`${icon.label}`)}
-      >
-<View style={styles.iconBackground}>
-                {renderIcon(icon.name, icon.type, 30, '#00695C')}
-            </View>
-      </TouchableOpacity>
+                    key={index}
+                    onPress={() => navigation.navigate(`${icon.label}`)}
+                  >
+                    <View style={styles.iconBackground}>
+                      {renderIcon(icon.name, icon.type, 30, '#00695C')}
+                    </View>
+                  </TouchableOpacity>
             
             <Text style={styles.iconText}>{icon.label}</Text>
           </View>
