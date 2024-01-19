@@ -6,16 +6,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { FAB } from 'react-native-paper'; // Import the FAB component
 
-const AnimalListScreen = () => {
+const ShedScreen = () => {
 
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
   const [loading, setLoading] = useState(true);
-  const [animals, setAnimals] = useState([]);
+  const [sheds, setSheds] = useState([]);
 
   // fetch all breed
-  const fetchAnimals = useCallback(async () => {
+  const fetchSheds = useCallback(async () => {
     try {
       const authToken = await AsyncStorage.getItem('authToken');
       const userID = await AsyncStorage.getItem('userID')
@@ -26,7 +26,7 @@ const AnimalListScreen = () => {
 
       const baseURLDev = "http://192.168.94.91:5000";
 
-      const response = await fetch(`${baseURLDev}/api/animal/get-goat-animals/${userID}`, {
+      const response = await fetch(`${baseURLDev}/api/shed/get-goat-sheds/${userID}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -38,35 +38,35 @@ const AnimalListScreen = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const animalsData = await response.json();
+      const shedsData = await response.json();
 
-      setAnimals(animalsData.animals);
+      setSheds(shedsData.sheds);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching animals:', error.message);
+      console.error('Error fetching sheds:', error.message);
     }
   }, []);
 
   useEffect(() => {
-    // Fetch the list of animals when the component mounts and when it is focused
-    fetchAnimals();
-  }, [isFocused, fetchAnimals]);
+    // Fetch the list of breeds when the component mounts and when it is focused
+    fetchSheds();
+  }, [isFocused, fetchSheds]);
 
 
   // Edit breed
-  const handleEditAnimal = async (AnimalId) => {
-    // Implement the logic to navigate to the edit screen with the breedId
-    // You can use navigation.navigate('EditBreedScreen', { breedId });
+  const handleEditShed = async (shed) => {
+    navigation.navigate('ShedDetails', { shed });
+
   };
   
-  //Delete Breed
-  const handleDeleteAnimal = async (animalId) => {
+  //Delete Shed
+  const handleDeleteShed = async (ShedId) => {
     try {
       const authToken = await AsyncStorage.getItem('authToken');
   
       const baseURLDev = "http://192.168.94.91:5000";
   
-      const response = await fetch(`${baseURLDev}/api/animal/delete-animal/${animalId}`, {
+      const response = await fetch(`${baseURLDev}/api/shed/delete-shed/${ShedId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -78,11 +78,11 @@ const AnimalListScreen = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
   
-      Alert.alert('Animal removed successfully');
-      // Fetch the updated list of animals after deletion
-      fetchAnimals();
+      Alert.alert('Shed deleted successfully');
+      // Fetch the updated list of breeds after deletion
+      fetchSheds();
     } catch (error) {
-      console.error('Error deleting animals:', error.message);
+      console.error('Error deleting shed:', error.message);
     }
   };
   
@@ -98,7 +98,7 @@ const AnimalListScreen = () => {
             <ArrowLeftIcon size="20" color="black" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerTitle}>Animals</Text>
+        <Text style={styles.headerTitle}>Sheds</Text>
       </View>
 
 
@@ -106,30 +106,27 @@ const AnimalListScreen = () => {
       {loading ? (
         <ActivityIndicator size="large" color="#00695C" />
       ) : (
-      <FlatList
-        data={animals}
-        keyExtractor={(item) => item._id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <View style={styles.itemHeader}>
-              <Text style={styles.tagID}>{item.tagID}</Text>
-              <Text style={styles.breedName}>{item.breedName}</Text>
-              {/* Additional information: color and gender */}
-              <View style={styles.additionalInfo}>
-                <Text style={styles.additionalInfoText}>{`${item.color}, ${item.gender}`}</Text>
-              </View>
-            </View>
+        <FlatList
+          data={sheds}
+          keyExtractor={(item) => item._id.toString()}
+          renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => handleDeleteAnimal(item._id)}
-              style={styles.deleteButton}
+              onPress={() => handleEditShed(item)}
+              style={styles.listItem}
             >
-              <MaterialIcons name="delete" size={24} color="#00695C" />
+              <View style={styles.itemHeader}>
+                <Text style={styles.animalType}>{item.animalType}</Text>
+                <Text style={styles.shedName}>{item.shedName}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleDeleteShed(item._id)}
+                style={styles.deleteButton}
+              >
+                <MaterialIcons name="delete" size={24} color="#00695C" />
+              </TouchableOpacity>
             </TouchableOpacity>
-          </View>
-        )}
-      />
-
-
+          )}
+        />
       )}
     </View>
 
@@ -140,7 +137,7 @@ const AnimalListScreen = () => {
         color="#fff"
         onPress={() => {
           // Handle the action when the FAB is pressed
-          navigation.navigate('AddAnimal');
+          navigation.navigate('AddShed');
         }}
       />
     </View>
@@ -188,10 +185,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
-  breedName: {
+  shedName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#00695C',
+    color: '#000',
   },
   deleteButton: {
     // backgroundColor: '#00695C',
@@ -223,4 +220,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default AnimalListScreen;
+export default ShedScreen;

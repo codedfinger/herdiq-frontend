@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Picker, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator, Picker } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const AnimalScreen = () => {
+const ShedScreen = () => {
 
   const navigation = useNavigation();
 
-  const [tagID, setTagID] = useState('');
   const [animalType, setAnimalType] = useState('goat');
-  const [breedName, setBreedName] = useState('');
-  const [gender, setGender] = useState('');
-  const [color, setColor] = useState('');
-  const [batchNo, setBatchNo] = useState('');
-  const [purchaseType, setPurchaseType] = useState('');
-  const [shed, setShed] = useState('');
-
+  const [shedName, setShedName] = useState('');
+  const [shedDescription, setShedDescription] = useState('');
   const [loading, setLoading] = useState(false);
 
   // add new breed
-  const handleSaveAnimal = async () => {
+  const handleSaveShed = async () => {
     try {
 
       setLoading(true); // Set loading to true when starting the add breed process
@@ -40,22 +33,13 @@ const AnimalScreen = () => {
       const baseURLDev = "http://192.168.94.91:5000"
 
       // Perform backend call to save data
-      const response = await fetch(`${baseURLDev}/api/animal/add-animal`, {
+      const response = await fetch(`${baseURLDev}/api/shed/add-shed`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',        
           'Authorization': `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ 
-            tagID,
-            animalType, 
-            breedName,
-            gender,
-            color,
-            batchNo,
-            purchaseType,
-            shed,  
-        }),
+        body: JSON.stringify({ animalType, shedName, shedDescription }),
       });
   
       if (!response.ok) {
@@ -63,16 +47,17 @@ const AnimalScreen = () => {
       }
   
       const data = await response.json();
-      console.log('Animal added successfully:', data);
+      console.log('Shed added successfully:', data);
 
-      navigation.navigate("Animals")
+      navigation.navigate("Shed")
 
     // Clear the form by updating state variables
       setAnimalType('');
-      setBreedName('');
+      setShedName('');
+      setShedDescription('');
 
     } catch (error) {
-      console.error('Error saving animal:', error.message);
+      console.error('Error saving shed:', error.message);
       Alert.alert('Something Went Wrong');
 
     } finally {
@@ -81,11 +66,6 @@ const AnimalScreen = () => {
   };
 
   return (
-    <KeyboardAwareScrollView
-    contentContainerStyle={{ flexGrow: 1 }}
-    extraScrollHeight={Platform.select({ ios: 20, android: 20 })}
-    enableOnAndroid
-  >
     <View style={styles.container}>
       <View style={styles.greenCard}>
         <View className="flex-row justify-start">
@@ -95,22 +75,11 @@ const AnimalScreen = () => {
             <ArrowLeftIcon size="20" color="black" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerTitle}>Add Animal</Text>
+        <Text style={styles.headerTitle}>Add Shed</Text>
       </View>
 
+
       <View style={styles.card}>
-
-      {/* Animal Info */}
-      <View style={styles.animalInfo}>
-      <Text style={styles.inputTitle}>Info</Text>
-      <TextInput
-          className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-          style={styles.input}
-          value={tagID}
-          placeholder="Tag ID"
-          onChangeText={text => setTagID(text)}
-        />
-
         <TextInput
           className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
           style={styles.input}
@@ -122,82 +91,31 @@ const AnimalScreen = () => {
         <TextInput
           className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
           style={styles.input}
-          value={breedName}
-          placeholder="Breed Name"
-          onChangeText={text => setBreedName(text)}
+          value={shedName}
+          placeholder="Shed Name"
+          onChangeText={text => setShedName(text)}
         />
-      </View>
 
-
-      {/* Appearance */}
-        <View style={styles.appearance}>
-        <Text style={styles.inputTitle}>Appearance</Text>
-          <View style={styles.inputRow}>
-          <TextInput
-              className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-              style={[styles.input, styles.flexibleInput]}  // Add flexibleInput style
-              value={gender}
-              placeholder="Gender"
-              onChangeText={text => setGender(text)}
-            />   
-
-            <View style={{ width: 10 }} />
-
-            <TextInput
-              className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-              style={[styles.input, styles.flexibleInput]}  // Add flexibleInput style
-              value={color}
-              placeholder="Color"
-              onChangeText={text => setColor(text)}
-            /> 
-
-          </View>
-            
-        </View >
-
-
-        
-        <View style={styles.purchase}>
-        <Text style={styles.inputTitle}>Purchase</Text>
-          <TextInput
-            className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-            style={styles.input}
-            value={batchNo}
-            placeholder="Batch No"
-            onChangeText={text => setBatchNo(text)}
-          />
-
-          <TextInput
-            className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-            style={styles.input}
-            value={purchaseType}
-            placeholder="Purchase Type"
-            onChangeText={text => setPurchaseType(text)}
-          />          
-
-          <TextInput
-            className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
-            style={styles.input}
-            value={shed}
-            placeholder="Shed"
-            onChangeText={text => setShed(text)}
-          />      
-        </View>
+        <TextInput
+          className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
+          style={styles.input}
+          value={shedDescription}
+          placeholder="Shed Description"
+          onChangeText={text => setShedDescription(text)}
+        />
 
         { loading ? (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator size="large" color="yellow" />
           </View>
         ):(
-          <TouchableOpacity onPress={handleSaveAnimal} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Save Animal</Text>
+          <TouchableOpacity onPress={handleSaveShed} style={styles.saveButton}>
+            <Text style={styles.saveButtonText}>Save Shed</Text>
           </TouchableOpacity>
         )}
         
       </View>
     </View>
-
-    </KeyboardAwareScrollView>
   );
 };
 
@@ -210,7 +128,7 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 76,
-    padding: 5, // Add padding
+    padding: 25, // Add padding
     borderRadius: 8, // Optional: Add border radius
   },
   secondCard: {
@@ -267,15 +185,6 @@ const styles = StyleSheet.create({
     width: '100%', // Ensure the text takes up the full width
 
   },
-
-  inputTitle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: 'gray',
-    textAlign: 'center', // Center the text
-    width: '100%', // Ensure the text takes up the full width
-
-  },
   profileImage: {
     width: 40,
     height: 40,
@@ -305,6 +214,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#000',
   },
+  chartContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
 
   input: {
     height: 50,
@@ -324,28 +242,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  animalInfo: {
-    marginBottom: 10, // Adjust this value
-    marginTop: 10,
-  },
-  appearance: {
-    marginBottom: 10, // Adjust this value
-    marginTop: 10,
-  },
-  purchase: {
-    marginBottom: 10, // Adjust this value
-  },
-  flexibleInput: {
-    flex: 1,
-  },
-  inputRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between', // or use 'space-around' for additional spacing
-    alignItems: 'center', // Optional: align items to the center vertically
-    marginTop: 10, // Add some top margin for spacing
-
-  },
 });
 
 
-export default AnimalScreen;
+export default ShedScreen;

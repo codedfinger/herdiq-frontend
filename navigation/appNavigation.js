@@ -20,6 +20,9 @@ import BreedListScreen from '../screens/subscreen/breed/BreedListScreen';
 import BreedScreen from '../screens/subscreen/breed/BreedScreen';
 import AnimalListScreen from '../screens/subscreen/animals/AnimalListScreen';
 import AnimalScreen from '../screens/subscreen/animals/AnimalScreen';
+import ShedListScreen from '../screens/subscreen/sheds/ShedListScreen';
+import ShedScreen from '../screens/subscreen/sheds/ShedScreen';
+import ShedDetailsScreen from '../screens/subscreen/sheds/shedDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,7 +51,10 @@ export default function AppNavigation() {
         <Stack.Screen name="AddBreed" options={{headerShown: false}} component={BreedScreen}/>
         <Stack.Screen name="Animals" options={{headerShown: false}} component={AnimalListScreen}/>
         <Stack.Screen name="AddAnimal" options={{headerShown: false}} component={AnimalScreen}/>
-        
+        <Stack.Screen name="Shed" options={{headerShown: false}} component={ShedListScreen} />
+        <Stack.Screen name="AddShed" options={{headerShown: false}} component={ShedScreen}/>
+        <Stack.Screen name="ShedDetails" options={{headerShown: false}} component={ShedDetailsScreen}/>
+
       </Stack.Navigator>
     </NavigationContainer>
   )

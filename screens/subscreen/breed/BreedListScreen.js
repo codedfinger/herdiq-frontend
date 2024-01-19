@@ -98,7 +98,7 @@ const BreedScreen = () => {
             <ArrowLeftIcon size="20" color="black" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerTitle}>Add Breed</Text>
+        <Text style={styles.headerTitle}>Breeds</Text>
       </View>
 
 
