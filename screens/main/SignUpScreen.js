@@ -4,7 +4,7 @@ import { themeColors } from '../../theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import { useNavigation } from '@react-navigation/native';
-
+import { API_BASE_URL } from '../../config/config';
 
 // subscribe for more videos like this :)
 export default function SignUpScreen() {
@@ -13,17 +13,16 @@ export default function SignUpScreen() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fullname, setFullname] = useState('');
+    const [farmName, setFarmName] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleSignUp = async () => {
         try {
 
-            const baseURLDev = "http://192.168.34.91:5000"
-            // const baseURLDev = "http://192.168.192.91:19000"
-
           setLoading(true); // Set loading to true when starting the signup process
     
-          const response = await fetch(`${baseURLDev}/api/auth/register`, {
+          const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -32,6 +31,8 @@ export default function SignUpScreen() {
               username,
               email,
               password,
+              fullname,
+              farmName,
             }),
           });
     
@@ -67,41 +68,58 @@ export default function SignUpScreen() {
         </View>
         <View className="flex-row justify-center">
             <Image source={require('../../assets/images/signup.png')} 
-                style={{width: 165, height: 110}} />
+                style={{width: 220, height: 110}} />
         </View>
       </SafeAreaView>
       <View className="flex-1 bg-white px-8 pt-8"
         style={{borderTopLeftRadius: 50, borderTopRightRadius: 50}}
       >
         <View className="form space-y-2">
-            <Text className="text-gray-700 ml-4">Username</Text>
+            {/* <Text className="text-white-100 ml-4">Username</Text> */}
+
+            <TextInput
+                className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
+                value={fullname}
+                onChangeText={(text) => setFullname(text)}
+                placeholder='Full name'
+            />
+
+            <TextInput
+                className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
+                value={farmName}
+                onChangeText={(text) => setFarmName(text)}
+                placeholder='Farm name'
+            />
+            
+            {/* <Text className="text-white-100 ml-4">Username</Text> */}
             <TextInput
                 className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
                 value={username}
                 onChangeText={(text) => setUsername(text)}
-                placeholder='Enter username'
+                placeholder='Username'
             />
-            <Text className="text-gray-700 ml-4">Email Address</Text>
+
+            {/* <Text className="text-white-100 ml-4">Email Address</Text> */}
             <TextInput
                 className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
-                placeholder='Enter Email'
+                placeholder='Email'
             />
-            <Text className="text-gray-700 ml-4">Password</Text>
+            {/* <Text className="text-white-100 ml-4">Password</Text> */}
             <TextInput
                 className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-7"
                 secureTextEntry
                 value={password}
                 onChangeText={(text) => setPassword(text)}
-                placeholder='Enter Password'
+                placeholder='Password'
             />
             {loading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="yellow" />
                 </View>
             ) : (
-                <TouchableOpacity onPress={handleSignUp} className="py-3 bg-greenbg-600 rounded-xl">
+                <TouchableOpacity onPress={handleSignUp} className="py-3 bg-green-500 rounded-xl">
                 <Text className="font-xl font-bold text-center text-white">Sign Up</Text>
                 </TouchableOpacity>
             )}

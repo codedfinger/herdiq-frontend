@@ -1,13 +1,41 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text,TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text,TouchableOpacity, RefreshControl, ScrollView } from 'react-native';
 import { Card, Title, Appbar, BottomNavigation } from 'react-native-paper';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '../../config/config'
 
 const MainScreen = () => {
   const navigation = useNavigation();
+
+  const [username, setUsername] = useState(null);
+  const [farmName, setFarmName] = useState(null);
+  const [chartData, setChartData] = useState(null);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+// Fetch user profile information when the component mounts
+useEffect(() => {
+  const fetchUsername = async () => {
+    try {
+      const storedUsername = await AsyncStorage.getItem('username');
+      const storedFarmName = await AsyncStorage.getItem('farmName');
+
+      if (storedUsername && storedFarmName) {
+        setUsername(storedUsername); 
+        setFarmName(storedFarmName);
+      }
+    } catch (error) {
+      console.error('Error fetching username:', error);
+    }
+  };
+
+  fetchUsername();
+}, []);
+
 
   const iconsData = [
     { name: 'goat', type: 'MaterialIcon', label: 'Goat' },
@@ -17,7 +45,6 @@ const MainScreen = () => {
     { name: 'history', type: 'MaterialIcon', label: 'Records' },
     { name: 'group-add', type: 'MaterialIcon', label: 'Employee' },
   
-
   ];
 
   const renderIcon = (name, type, size, color) => {
@@ -34,14 +61,60 @@ const MainScreen = () => {
     }
   };
 
-  const username = "Alex"; // Replace with the actual username
+  useEffect(() => {
+    fetchData(); // Fetch data when component mounts
+  }, []);
 
-  // Example data for the line chart
+  const fetchData = async () => {
+    try {
+
+      const authToken = await AsyncStorage.getItem('authToken');
+      const userID = await AsyncStorage.getItem('userID');
+
+      if (!authToken || !userID) {
+        console.error('Please log in.');
+        return;
+      }
+
+      // Fetch data from your API
+      const response = await fetch(`${API_BASE_URL}/api/animal/get-animal-user/${userID}`,{
+        method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`,
+            },
+            // body: JSON.stringify(${userID}),
+      });
+      const jsonData = await response.json();
+      
+      // Process fetched data and update state
+    if (jsonData.length > 0) {
+      const labels = jsonData.map(entry => entry.animal);
+      const dataPoints = jsonData.map(entry => entry.value);
+      const sortedData = {
+        labels: labels,
+        datasets: [{
+          data: dataPoints
+        }]
+      };
+      setChartData(sortedData);
+      console.log("chart data", chartData);
+    } else {
+      // Handle case when jsonData is empty
+      console.warn('No data available.');
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+
+  //Example data for the line chart
   const data = {
-    labels: ['Goat', 'Sheep', 'Cow', 'Pig', 'Bird'], // Replace with your actual labels
+    labels: ['Goat', 'Sheep', 'Cow', 'Rabbit'], // Replace with your actual labels
     datasets: [
       {
-        data: [19, 21, 25, 22, 23, 33], // Replace with your actual data
+        data: [0, 0, 0, 0, 0, 0], // Replace with your actual data
       },
     ],
   };
@@ -60,13 +133,22 @@ const MainScreen = () => {
   };
 
   return (
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      // refreshControl={
+      //   <RefreshControl
+      //     refreshing={refreshing}
+      //     onRefresh={onRefresh}
+      //   />
+      // }
+    >
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileImage}>
-          <Text style={styles.profileInitials}>{username.charAt(0)}</Text>
+        <Text style={styles.profileInitials}>{username ? username.charAt(0) : "..."}</Text>
         </View>
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Hi, {username}</Text>
+        <Text style={styles.greetingText}>Hi, {username ? username : "..."}</Text>
         </View>
         <View style={styles.appbarIcons}>
           <MaterialIcon name="notifications" size={26} color="#00695C" onPress={() => { /* Handle notification press */ }} style={styles.iconSpacing}/>
@@ -76,7 +158,7 @@ const MainScreen = () => {
 
       <View style={styles.greenCard}>
         <Text style={styles.currentDate}>{getCurrentDate()}</Text>
-        <Text style={styles.mainHeading}>Mo's Ranch</Text>
+        <Text style={styles.mainHeading}>{farmName ? farmName : ''}</Text>
         <Text style={styles.subHeading}>Start managing your farm</Text>
       </View>
 
@@ -101,8 +183,18 @@ const MainScreen = () => {
     </View>
 
       {/* Bar Chart */}
-      {/* Line Chart */}
-      <View style={styles.chartContainer}>
+      { chartData ? (
+        <View style={styles.chartContainer}>
+        <LineChart
+          data={chartData}
+          width={350}
+          height={200}
+          chartConfig={chartConfig}
+          bezier
+        />
+      </View>
+      ):(
+        <View style={styles.chartContainer}>
         <LineChart
           data={data}
           width={350}
@@ -111,8 +203,11 @@ const MainScreen = () => {
           bezier
         />
       </View>
+      )}
+      
 
     </View>
+    </ScrollView>
   );
 };
 

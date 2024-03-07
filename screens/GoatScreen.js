@@ -12,17 +12,18 @@ const GoatScreen = () => {
   const navigation = useNavigation();
 
   const iconsData = [
-    { name: 'attach-money',type: 'MaterialIcon', label: 'Finance' },
-    { name: 'history', type: 'MaterialIcon', label: 'Records' },
-    { name: 'group-add', type: 'MaterialIcon', label: 'Employee' },
-    { name: 'goat', type: 'MaterialIcon', label: 'Animals' },
-    { name: 'pets', type: 'MaterialIcon', label: 'Breed' },
-    { name: 'house-siding', type: 'MaterialIcon', label: 'Shed' },
-    { name: 'local-hospital', type: 'MaterialIcon', label: 'Vaccine' },
-    { name: 'dna', type: 'MaterialCommunityIcon', label: 'Progeny' },
-    { name: 'gender-male-female', type: 'MaterialCommunityIcon', label: 'Breedings' },
-    { name: 'loyalty', type: 'MaterialIcon', label: 'Tags' },
-    { name: 'settings', type: 'MaterialIcon', label: 'Settings' },
+    { name: 'attach-money',type: 'MaterialIcon', label: 'Finance', title: 'Finance' },
+    { name: 'history', type: 'MaterialIcon', label: 'Records', title: 'Records' },
+    { name: 'group-add', type: 'MaterialIcon', label: 'Employee', title: 'Employee' },
+    { name: 'goat', type: 'MaterialIcon', label: 'GoatAnimals', title: 'Animals' },
+    { name: 'pets', type: 'MaterialIcon', label: 'GoatBreed', title: 'Breed' },
+    { name: 'house-siding', type: 'MaterialIcon', label: 'GoatShed', title: 'Shed' },
+    { name: 'local-hospital', type: 'MaterialIcon', label: 'GoatVaccine', title: 'Vaccine' },
+    { name: 'dna', type: 'MaterialCommunityIcon', label: 'GoatProgeny', title: 'Progeny' },
+    { name: 'gender-male-female', type: 'MaterialCommunityIcon', label: 'GoatBreeding', title: 'Breeding' },
+    { name: 'loyalty', type: 'MaterialIcon', label: 'Tags', title: 'Tags' },
+    { name: 'baby-bottle', type: 'MaterialCommunityIcon', label: 'GoatMilk', title: 'Milk' },
+
 
   ];
 
@@ -86,7 +87,7 @@ const GoatScreen = () => {
                   {renderIcon(icon.name, icon.type, 30, '#00695C')}
                 </View>
                 </TouchableOpacity>
-              <Text style={styles.iconText}>{icon.label}</Text>
+              <Text style={styles.iconText}>{icon.title}</Text>
             </View>
           ))}
         </View>

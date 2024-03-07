@@ -1,17 +1,27 @@
 import React, { useState } from 'react';
 import { BottomNavigation, Text, Provider as PaperProvider } from 'react-native-paper';
 import MainScreen from './MainScreen';
+import ProfileScreen from './Profile';
+import ReportScreen from './Reports';
 
 
-const MusicRoute = () => {
+const HomeRoute = () => {
   return (
     <MainScreen />
   );
 };
 
-const AlbumsRoute = () => <Text>Albums</Text>;
+const ProfileRoute = () => {
+  return (
+    <ProfileScreen />
+  );
+};
 
-const NotificationsRoute = () => <Text>Notifications</Text>;
+const ReportRoute = () => {
+  return (
+    <ReportScreen />
+  );
+};
 
 const DashboardScreen = () => {
 
@@ -23,9 +33,9 @@ const DashboardScreen = () => {
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    home: MusicRoute,
-    reports: AlbumsRoute,
-    profile: NotificationsRoute,
+    home: HomeRoute,
+    reports: ReportRoute,
+    profile: ProfileRoute,
   });
 
   return (

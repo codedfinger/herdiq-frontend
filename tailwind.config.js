@@ -9,7 +9,7 @@ module.exports = {
     extend: {
       colors: {
         white: {
-          '100': '#ffffff'
+          '100': '#EEEEEE'
         },
         yellow: {
           '400': '#FFD700', // Change this color code to your desired yellow color

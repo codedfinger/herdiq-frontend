@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text,TouchableOpacity } from 'react-native';
 import { Card, Title, Appbar, BottomNavigation } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import { LineChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native'
 import {ArrowLeftIcon} from 'react-native-heroicons/solid'
@@ -10,25 +12,36 @@ const SheepScreen = () => {
   const navigation = useNavigation();
 
   const iconsData = [
-    { name: 'attach-money', label: 'Finance' },
-    { name: 'history', label: 'Records' },
-    { name: 'group-add', label: 'Employee' },
-    { name: 'goat', label: 'Animals' },
-    { name: 'subtitles', label: 'Breed' },
-    { name: 'house-siding', label: 'Shed' },
-    { name: 'local-hospital', label: 'Vaccine' },
-    { name: 'local-mall', label: 'Breedings' },
-    { name: 'pets', label: 'Matings' },
-    { name: 'loyalty', label: 'Tags' },
-    { name: 'settings', label: 'Settings' },
-
+    { name: 'attach-money',type: 'MaterialIcon', label: 'Finance', title: 'Finance' },
+    { name: 'history', type: 'MaterialIcon', label: 'Records', title: 'Records' },
+    { name: 'group-add', type: 'MaterialIcon', label: 'Employee', title: 'Employee' },
+    { name: 'goat', type: 'MaterialIcon', label: 'SheepAnimals', title: 'Animals' },
+    { name: 'pets', type: 'MaterialIcon', label: 'SheepBreed', title: 'Breed' },
+    { name: 'house-siding', type: 'MaterialIcon', label: 'SheepShed', title: 'Shed' },
+    { name: 'local-hospital', type: 'MaterialIcon', label: 'SheepVaccine', title: 'Vaccine' },
+    { name: 'dna', type: 'MaterialCommunityIcon', label: 'SheepProgeny', title: 'Progeny' },
+    { name: 'gender-male-female', type: 'MaterialCommunityIcon', label: 'SheepBreeding', title: 'Breeding' },
+    { name: 'loyalty', type: 'MaterialIcon', label: 'Tags', title: 'Tags' },
+    { name: 'baby-bottle', type: 'MaterialCommunityIcon', label: 'SheepMilk', title: 'Milk' },
   ];
 
-  const username = "Alex"; // Replace with the actual username
+  const renderIcon = (name, type, size, color) => {
+    switch (type) {
+      case 'MaterialIcon':
+        return <MaterialIcon name={name} size={size} color={color} />;
+      case 'FontAwesome':
+        return <FontAwesomeIcon name={name} size={size} color={color} />;
+      case 'MaterialCommunityIcon':
+        return <MaterialCommunityIcon name={name} size={size} color={color} />;
+      default:
+        // Return a default icon or handle the case as needed
+        return null;
+    }
+  };
 
   // Example data for the line chart
   const data = {
-    labels: ['Goat', 'Sheep', 'Cow', 'Pig', 'Bird'], // Replace with your actual labels
+    labels: ['Goat', 'Sheep', 'Cow', 'Pig', 'Rabbit'], // Replace with your actual labels
     datasets: [
       {
         data: [19, 21, 25, 22, 23, 33], // Replace with your actual data
@@ -64,10 +77,15 @@ const SheepScreen = () => {
         <View style={styles.iconContainer}>
           {iconsData.slice(3).map((icon, index) => (
             <View key={index} style={styles.iconWrapper}>
-              <View style={styles.iconBackground}>
-                <Icon name={icon.name} size={30} color="#00695C" />
-              </View>
-              <Text style={styles.iconText}>{icon.label}</Text>
+              <TouchableOpacity
+                key={index}
+                onPress={() => navigation.navigate(`${icon.label}`)}
+              >
+                <View style={styles.iconBackground}>
+                  {renderIcon(icon.name, icon.type, 30, '#00695C')}
+                </View>
+                </TouchableOpacity>
+              <Text style={styles.iconText}>{icon.title}</Text>
             </View>
           ))}
         </View>
@@ -122,7 +140,7 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     alignItems: 'center',
-    margin: 8,
+    margin: 10,
   },
   iconBackground: {
     backgroundColor: 'rgba(178, 223, 219, 0.2)',

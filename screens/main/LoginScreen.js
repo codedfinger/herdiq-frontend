@@ -5,6 +5,7 @@ import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 import { themeColors } from '../../theme'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '../../config/config'
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -15,12 +16,9 @@ export default function LoginScreen() {
     const handleLogin = async () => {
         try {
 
-            const baseURLDev = "http://192.168.94.91:5000"
-            // const baseURLDev = "http://192.168.192.91:19000"
-
           setLoading(true); // Set loading to true when starting the signup process
     
-          const response = await fetch(`${baseURLDev}/api/auth/login`, {
+          const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -40,6 +38,8 @@ export default function LoginScreen() {
 
             await AsyncStorage.setItem('authToken', data.data.token);
             await AsyncStorage.setItem('userID', data.data.user._id)
+            await AsyncStorage.setItem('username', data.data.user.username)
+            await AsyncStorage.setItem('farmName', data.data.user.farmName)
 
             console.log("user", await AsyncStorage.getItem('userID'))
 
@@ -76,14 +76,14 @@ export default function LoginScreen() {
         style={{borderTopLeftRadius: 50, borderTopRightRadius: 50}} 
         className="flex-1 bg-white px-8 pt-8">
           <View className="form space-y-2">
-            <Text className="text-gray-700 ml-4">Email Address</Text>
+            <Text className="text-white-100 ml-4">Email Address</Text>
             <TextInput 
               className="p-4 bg-gray-100 text-gray-700 rounded-2xl mb-3"
               placeholder="email"
               value={email}
               onChangeText={(text) => setEmail(text)}
             />
-            <Text className="text-gray-700 ml-4">Password</Text>
+            <Text className="text-white-100 ml-4">Password</Text>
             <TextInput 
               className="p-4 bg-gray-100 text-gray-700 rounded-2xl"
               secureTextEntry
@@ -92,20 +92,20 @@ export default function LoginScreen() {
               onChangeText={(text) => setPassword(text)}
             />
             <TouchableOpacity className="flex items-end">
-              <Text className="text-gray-700 mb-5">Forgot Password?</Text>
+              <Text className="text-white-100 mb-5">Forgot Password?</Text>
             </TouchableOpacity>
             {loading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="yellow" />
                 </View>
             ) : (
-                <TouchableOpacity onPress={handleLogin} className="py-3 bg-greenbg-600 rounded-xl">
+                <TouchableOpacity onPress={handleLogin} className="py-3 bg-green-500 rounded-xl">
                 <Text className="font-xl font-bold text-center text-white">Login</Text>
                 </TouchableOpacity>
             )}
             
           </View>
-          <Text className="text-xl text-gray-700 font-bold text-center py-5">Or</Text>
+          <Text className="text-xl text-white-100 font-bold text-center py-5">Or</Text>
           <View className="flex-row justify-center space-x-12">
             <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
               <Image source={require('../../assets/icons/google.png')} className="w-10 h-10" />
@@ -118,11 +118,11 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
           <View className="flex-row justify-center mt-7">
-              <Text className="text-gray-500 font-semibold">
+              <Text className="text-white-100 font-semibold">
                   Don't have an account?
               </Text>
               <TouchableOpacity onPress={()=> navigation.navigate('SignUp')}>
-                  <Text className="font-semibold text-greenbg-600"> Sign Up</Text>
+                  <Text className="font-semibold text-yellow-400"> Sign Up</Text>
               </TouchableOpacity>
           </View>
           
