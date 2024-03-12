@@ -14,10 +14,18 @@ const ReportScreen = () => {
   const [username, setUsername] = useState(null);
   const [farmName, setFarmName] = useState(null);
   const [chartData, setChartData] = useState(null);
+  const [dataAvailable, setDataAvailable] = useState(true);
+  const [countDataAvailable, setCountDataAvailable] = useState(true);
+  const [breedsCount, setBreedsCount] = useState(0);
+  const [vaccinesCount, setVaccinesCount] = useState(0);
+  const [shedsCount, setShedsCount] = useState(0);
+  const [milkQty, setMilkQty] = useState(0);
+
 
   useEffect(() => {
     fetchUserInfo();
     fetchData();
+    fetchCountData();
   }, []);
 
   const fetchUserInfo = async () => {
@@ -44,6 +52,8 @@ const ReportScreen = () => {
         return;
       }
 
+      console.log("user id data", userID)
+
       const response = await fetch(`${API_BASE_URL}/api/animal/get-animal-user/${userID}`, {
         method: 'GET',
         headers: {
@@ -53,19 +63,103 @@ const ReportScreen = () => {
       });
       const jsonData = await response.json();
 
-      const data = jsonData.map(entry => ({ 
-        name: entry.animal, 
-        population: entry.value,
-        color: getRandomColor(), 
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15 
-      }));
+      const animalData = jsonData.data
 
-      setChartData(data);
+      if (!jsonData.success) {
+        setDataAvailable(false);
+      } else {
+        // Check if data is available
+        if (!animalData || !animalData.animals || animalData.animals.length === 0) {
+          setDataAvailable(false);
+        } else {
+          const data = animalData.animals.map(entry => ({ 
+            name: entry.animal, 
+            population: entry.value,
+            color: getRandomColor(), 
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15 
+          }));
+          setChartData(data);
+        }
+      }
+      
+
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   }
+
+  const fetchCountData = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem('authToken');
+      const userID = await AsyncStorage.getItem('userID');
+  
+      if (!authToken || !userID) {
+        console.error('Please log in.');
+        return;
+      }
+  
+      const breedResponse = await fetch(`${API_BASE_URL}/api/breed/get-all-breeds/${userID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      const vaccineResponse = await fetch(`${API_BASE_URL}/api/vaccine/get-user-vaccines/${userID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      const shedResponse = await fetch(`${API_BASE_URL}/api/shed/get-all-shed/${userID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+      const milkResponse = await fetch(`${API_BASE_URL}/api/milk/get-total-milking/${userID}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+      });
+  
+      const responses = await Promise.all([breedResponse, vaccineResponse, shedResponse, milkResponse]);
+      const responsesJson = await Promise.all(responses.map(response => response.json()));
+  
+      const success = responsesJson.every(response => response.success);
+  
+      if (!success) {
+        setCountDataAvailable(false);
+      } else {
+        const [breedDataJson, vaccineDataJson, shedDataJson, milkDataJson] = responsesJson;
+  
+        // Set states based on fetched data
+        setBreedsCount(breedDataJson.data.breed.length);
+        setVaccinesCount(vaccineDataJson.data.vaccines.length);
+        setShedsCount(shedDataJson.data.shed.length);
+        setMilkQty(milkDataJson.data.totalMilkQty);
+
+        console.log(
+          "breeds count", breedsCount, 
+          "shed count", shedsCount,
+          "vaccine count", vaccinesCount,
+          "milk count", milkQty
+        )
+
+        setCountDataAvailable(true);
+
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  
+  
 
   const availableColors = ["#4A148C", "#880E4F", "#0D47A1", "#01579B", "#E65100"];
 
@@ -118,61 +212,66 @@ const ReportScreen = () => {
 
 
         {/* Pie Chart */}
-        { chartData ? (
+       {dataAvailable ? (
+        <View>
           <View style={styles.chartContainer}>
-          <PieChart
-            data={chartData}
-            width={350}
-            height={200}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            paddingLeft="15"
-            absolute
-          />
+            <PieChart
+              data={chartData || []}
+              width={350}
+              height={200}
+              chartConfig={chartConfig}
+              accessor="population"
+              backgroundColor="transparent"
+              paddingLeft="15"
+              absolute
+            />
+          </View>
+
         </View>
-        ):(
-          <View style={styles.chartContainer}>
-          <PieChart
-            data={[]}
-            width={350}
-            height={200}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            paddingLeft="15"
-            absolute
-          />
-        </View>
+
+        ) : (
+          <View style={styles.noDataContainer}>
+            <Text style={styles.noDataText}>No data available</Text>
+          </View>
         )}
 
-        <View style={styles.gridContainer}>
-            {/* Top row */}
-            <View style={styles.rowContainer}>
-              <View style={styles.gridItem}>
-                <Text style={styles.gridItemText}>Vaccines</Text>
-                <Text style={styles.gridItemText}>5</Text>
+         {/* Pie Chart */}
+       {countDataAvailable ? (
+        <View>
+          <View style={styles.gridContainer}>
+          {/* Top row */}
+          <View style={styles.rowContainer}>
+            <View style={styles.gridItem}>
+              <Text style={styles.gridItemText}>Vaccines</Text>
+              <Text style={styles.gridItemText}>{vaccinesCount}</Text>
 
-              </View>
-              <View style={styles.gridItem}>
-                 <Text style={styles.gridItemText}>Breeds</Text>
-                <Text style={styles.gridItemText}>3</Text>             
-             </View>
             </View>
+            <View style={styles.gridItem}>
+              <Text style={styles.gridItemText}>Breeds</Text>
+              <Text style={styles.gridItemText}>{breedsCount}</Text>             
+          </View>
+          </View>
 
-            {/* Bottom row */}
-            <View style={styles.rowContainer}>
-              <View style={styles.gridItem}>
-                <Text style={styles.gridItemText}>Sheds</Text>
-                <Text style={styles.gridItemText}>2</Text>
-              </View>
-              <View style={styles.gridItem}>
-                <Text style={styles.gridItemText}>Milk Qty</Text>
-                <Text style={styles.gridItemText}>7 Ltr</Text>
-              </View>
+          {/* Bottom row */}
+          <View style={styles.rowContainer}>
+            <View style={styles.gridItem}>
+              <Text style={styles.gridItemText}>Sheds</Text>
+              <Text style={styles.gridItemText}>{shedsCount}</Text>
+            </View>
+            <View style={styles.gridItem}>
+              <Text style={styles.gridItemText}>Milk Qty</Text>
+              <Text style={styles.gridItemText}>{milkQty} Ltr</Text>
             </View>
           </View>
-        
+          </View>
+        </View>
+
+        ) : (
+          <View style={styles.noDataContainer}>
+            <Text style={styles.noDataText}>No data available</Text>
+          </View>
+        )}
+
       </View>
     </ScrollView>
   );
@@ -311,6 +410,17 @@ const styles = StyleSheet.create({
   gridItemText: {
     fontSize: 18, // Adjust the font size as needed
     color: '#004D40', // White color
+  },
+  noDataContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noDataText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#7F7F7F',
+    fontStyle: 'italic',
   },
 });
 

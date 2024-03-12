@@ -5,7 +5,7 @@ import {ArrowLeftIcon} from 'react-native-heroicons/solid'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { FAB } from 'react-native-paper'; // Import the FAB component
-import { API_BASE_URL } from '../../../../config/config';
+import { API_BASE_URL } from '../../../config/config';
 
 const VaccineListScreen = () => {
 
@@ -16,7 +16,6 @@ const VaccineListScreen = () => {
   const [vaccines, setVaccines] = useState([]);
   const [error, setError] = useState(null);
 
-  // fetch all breed
   const fetchVaccines = useCallback(async () => {
     try {
       const authToken = await AsyncStorage.getItem('authToken');
@@ -25,7 +24,7 @@ const VaccineListScreen = () => {
         console.error('Please log in.');
         return;
       }
-
+  
       const response = await fetch(`${API_BASE_URL}/api/vaccine/get-user-vaccines/${userID}`, {
         method: 'GET',
         headers: {
@@ -33,24 +32,31 @@ const VaccineListScreen = () => {
           'Authorization': `Bearer ${authToken}`,
         },
       });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          // If status is 404, set animals to an empty array
+  
+      const jsonData = await response.json();
+  
+      const vaccineData = jsonData.data
+  
+      console.log("animal data", vaccineData)
+  
+      if (!jsonData.success) {
+        setVaccines([]);
+      } else {
+        // Check if data is available
+        if (!vaccineData || !vaccineData.vaccines || vaccineData.vaccines.length === 0) {
           setVaccines([]);
         } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          setVaccines(vaccineData.vaccines);
         }
-      } else {
-        const vaccineData = await response.json();
-        setVaccines(vaccineData.vaccines);
       }
+  
     } catch (error) {
       console.error('Error fetching vaccines:', error.message);
     } finally {
       setLoading(false); // Set loading to false in all cases
     }
-  }, []);
+  }, [setLoading]);
+  
 
   useEffect(() => {
     // Fetch the list of breeds when the component mounts and when it is focused
@@ -60,7 +66,7 @@ const VaccineListScreen = () => {
 
   // Edit breed
   const handleEditVaccine = async (vaccine) => {
-    navigation.navigate('VaccinesDetails', { vaccine });
+    navigation.navigate('VaccineDetails', { vaccine });
 
   };
   

@@ -157,7 +157,7 @@ const AnimalDetailsScreen = ({ route }) => {
             style={styles.addIconContainer}
             onPress={() => {
               // Add your logic for handling the "add" action here
-              navigation.navigate('Progeny')
+              navigation.navigate('SheepProgeny')
 
             }}>
             <MaterialIcons name="add-circle-outline" size={24} color="#BDBDBD" />

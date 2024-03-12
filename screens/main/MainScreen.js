@@ -38,12 +38,12 @@ useEffect(() => {
 
 
   const iconsData = [
-    { name: 'goat', type: 'MaterialIcon', label: 'Goat' },
-    { name: 'sheep', type: 'MaterialCommunityIcon', label: 'Sheep' },
-    { name: 'rabbit', type: 'MaterialCommunityIcon', label: 'Rabbit' },
-    { name: 'cow', type: 'MaterialCommunityIcon', label: 'Cow' },
-    { name: 'history', type: 'MaterialIcon', label: 'Records' },
-    { name: 'group-add', type: 'MaterialIcon', label: 'Employee' },
+    { name: 'goat', type: 'MaterialIcon', label: 'Goat', title: 'Goat' },
+    { name: 'sheep', type: 'MaterialCommunityIcon', label: 'Sheep', title: 'Sheep' },
+    { name: 'rabbit', type: 'MaterialCommunityIcon', label: 'Rabbit', title: 'Rabbit' },
+    { name: 'cow', type: 'MaterialCommunityIcon', label: 'Cow', title: 'Cow' },
+    { name: 'history', type: 'MaterialIcon', label: 'Records', title: 'Reports' },
+    { name: 'group-add', type: 'MaterialIcon', label: 'Employee', title: 'Employee' },
   
   ];
 
@@ -86,11 +86,15 @@ useEffect(() => {
             // body: JSON.stringify(${userID}),
       });
       const jsonData = await response.json();
+
+      const userAnimals = jsonData.data.animals
+
+      // console.log("chart data", userAnimals)
       
       // Process fetched data and update state
-    if (jsonData.length > 0) {
-      const labels = jsonData.map(entry => entry.animal);
-      const dataPoints = jsonData.map(entry => entry.value);
+    if (userAnimals.length > 0) {
+      const labels = userAnimals.map(entry => entry.animal);
+      const dataPoints = userAnimals.map(entry => entry.value);
       const sortedData = {
         labels: labels,
         datasets: [{
@@ -114,7 +118,7 @@ useEffect(() => {
     labels: ['Goat', 'Sheep', 'Cow', 'Rabbit'], // Replace with your actual labels
     datasets: [
       {
-        data: [0, 0, 0, 0, 0, 0], // Replace with your actual data
+        data: [0, 0, 0, 0], // Replace with your actual data
       },
     ],
   };
@@ -169,7 +173,7 @@ useEffect(() => {
           <View key={index} style={styles.iconWrapper}>
                   <TouchableOpacity
                     key={index}
-                    onPress={() => navigation.navigate(`${icon.label}`)}
+                    onPress={() => navigation.navigate(`${icon.title}`)}
                   >
                     <View style={styles.iconBackground}>
                       {renderIcon(icon.name, icon.type, 30, '#00695C')}

@@ -9,6 +9,7 @@ import LoginScreen from '../screens/main/LoginScreen';
 import SignUpScreen from '../screens/main/SignUpScreen';
 import DashboardScreen from '../screens/main/DashboardScreen';
 import MainScreen from '../screens/main/MainScreen'
+import VerifyScreen from '../screens/main/VerifyScreen'
 
 import GoatScreen from '../screens/GoatScreen';
 import SheepScreen from '../screens/SheepScreen';
@@ -121,6 +122,9 @@ import SheepEditMilkScreen from '../screens/subscreen/SheepModule/milk/editMilkS
 import ProfileScreen from '../screens/main/Profile';
 import ReportScreen from '../screens/main/Reports';
 import PasswordScreen from '../screens/main/ChangePassword';
+import VaccineListScreen from '../screens/subscreen/Vaccine/VaccineListScreen';
+import VaccineDetailsScreen from '../screens/subscreen/Vaccine/VaccineDetailsScreen';
+import VaccineScreen from '../screens/subscreen/Vaccine/VaccineScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -139,6 +143,11 @@ export default function AppNavigation({ isAuthenticated, setAuthenticated }) {
         <Stack.Screen name="Profile" options={{headerShown: false}} component={ProfileScreen} />
         <Stack.Screen name="Reports" options={{headerShown: false}} component={ReportScreen} />
         <Stack.Screen name="Password" options={{headerShown: false}} component={PasswordScreen} />
+        <Stack.Screen name="Verify" options={{headerShown: false}} component={VerifyScreen} />
+        <Stack.Screen name="Vaccine" options={{headerShown: false}} component={VaccineListScreen} />
+        <Stack.Screen name="AddVaccine" options={{headerShown: false}} component={VaccineScreen} />
+        <Stack.Screen name="VaccineDetails" options={{headerShown: false}} component={VaccineDetailsScreen} />
+
 
         {/* animal screen */}
         <Stack.Screen name="Goat" options={{headerShown: false}} component={GoatScreen} />
@@ -156,9 +165,6 @@ export default function AppNavigation({ isAuthenticated, setAuthenticated }) {
         <Stack.Screen name="GoatShed" options={{headerShown: false}} component={GoatShedListScreen} />
         <Stack.Screen name="GoatAddShed" options={{headerShown: false}} component={GoatShedScreen}/>
         <Stack.Screen name="GoatShedDetails" options={{headerShown: false}} component={GoatShedDetailsScreen}/>
-        <Stack.Screen name="GoatVaccine" options={{headerShown: false}} component={GoatVaccineListScreen} />
-        <Stack.Screen name="GoatAddVaccine" options={{headerShown: false}} component={GoatVaccineScreen}/>
-        <Stack.Screen name="GoatVaccinesDetails" options={{headerShown: false}} component={GoatVaccineDetailsScreen}/>
         <Stack.Screen name="GoatProgeny" options={{headerShown: false}} component={GoatProgenyScreen} />
         <Stack.Screen name="GoatBreeding" options={{headerShown: false}} component={GoatBreedingListScreen} />
         <Stack.Screen name="GoatAddBreeding" options={{headerShown: false}} component={GoatBreedingScreen}/>
@@ -176,9 +182,6 @@ export default function AppNavigation({ isAuthenticated, setAuthenticated }) {
         <Stack.Screen name="CowShed" options={{headerShown: false}} component={CowShedListScreen} />
         <Stack.Screen name="CowAddShed" options={{headerShown: false}} component={CowShedScreen}/>
         <Stack.Screen name="CowShedDetails" options={{headerShown: false}} component={CowShedDetailsScreen}/>
-        <Stack.Screen name="CowVaccine" options={{headerShown: false}} component={CowVaccineListScreen} />
-        <Stack.Screen name="CowAddVaccine" options={{headerShown: false}} component={CowVaccineScreen}/>
-        <Stack.Screen name="CowVaccinesDetails" options={{headerShown: false}} component={CowVaccineDetailsScreen}/>
         <Stack.Screen name="CowProgeny" options={{headerShown: false}} component={CowProgenyScreen} />
         <Stack.Screen name="CowBreeding" options={{headerShown: false}} component={CowBreedingListScreen} />
         <Stack.Screen name="CowAddBreeding" options={{headerShown: false}} component={CowBreedingScreen}/>
@@ -196,9 +199,6 @@ export default function AppNavigation({ isAuthenticated, setAuthenticated }) {
         <Stack.Screen name="PigShed" options={{headerShown: false}} component={PigShedListScreen} />
         <Stack.Screen name="PigAddShed" options={{headerShown: false}} component={PigShedScreen}/>
         <Stack.Screen name="PigShedDetails" options={{headerShown: false}} component={PigShedDetailsScreen}/>
-        <Stack.Screen name="PigVaccine" options={{headerShown: false}} component={PigVaccineListScreen} />
-        <Stack.Screen name="PigAddVaccine" options={{headerShown: false}} component={PigVaccineScreen}/>
-        <Stack.Screen name="PigVaccinesDetails" options={{headerShown: false}} component={PigVaccineDetailsScreen}/>
         <Stack.Screen name="PigProgeny" options={{headerShown: false}} component={PigProgenyScreen} />
         <Stack.Screen name="PigBreeding" options={{headerShown: false}} component={PigBreedingListScreen} />
         <Stack.Screen name="PigAddBreeding" options={{headerShown: false}} component={PigBreedingScreen}/>
@@ -216,9 +216,6 @@ export default function AppNavigation({ isAuthenticated, setAuthenticated }) {
         <Stack.Screen name="RabbitShed" options={{headerShown: false}} component={RabbitShedListScreen} />
         <Stack.Screen name="RabbitAddShed" options={{headerShown: false}} component={RabbitShedScreen}/>
         <Stack.Screen name="RabbitShedDetails" options={{headerShown: false}} component={RabbitShedDetailsScreen}/>
-        <Stack.Screen name="RabbitVaccine" options={{headerShown: false}} component={RabbitVaccineListScreen} />
-        <Stack.Screen name="RabbitAddVaccine" options={{headerShown: false}} component={RabbitVaccineScreen}/>
-        <Stack.Screen name="RabbitVaccinesDetails" options={{headerShown: false}} component={RabbitVaccineDetailsScreen}/>
         <Stack.Screen name="RabbitProgeny" options={{headerShown: false}} component={RabbitProgenyScreen} />
         <Stack.Screen name="RabbitBreeding" options={{headerShown: false}} component={RabbitBreedingListScreen} />
         <Stack.Screen name="RabbitAddBreeding" options={{headerShown: false}} component={RabbitBreedingScreen}/>
@@ -236,9 +233,6 @@ export default function AppNavigation({ isAuthenticated, setAuthenticated }) {
         <Stack.Screen name="SheepShed" options={{headerShown: false}} component={SheepShedListScreen} />
         <Stack.Screen name="SheepAddShed" options={{headerShown: false}} component={SheepShedScreen}/>
         <Stack.Screen name="SheepShedDetails" options={{headerShown: false}} component={SheepShedDetailsScreen}/>
-        <Stack.Screen name="SheepVaccine" options={{headerShown: false}} component={SheepVaccineListScreen} />
-        <Stack.Screen name="SheepAddVaccine" options={{headerShown: false}} component={SheepVaccineScreen}/>
-        <Stack.Screen name="SheepVaccinesDetails" options={{headerShown: false}} component={SheepVaccineDetailsScreen}/>
         <Stack.Screen name="SheepProgeny" options={{headerShown: false}} component={SheepProgenyScreen} />
         <Stack.Screen name="SheepBreeding" options={{headerShown: false}} component={SheepBreedingListScreen} />
         <Stack.Screen name="SheepAddBreeding" options={{headerShown: false}} component={SheepBreedingScreen}/>

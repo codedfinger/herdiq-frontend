@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, TextInput, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { themeColors } from '../../theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
@@ -37,15 +37,16 @@ export default function SignUpScreen() {
           });
     
           const data = await response.json();
+
     
           if (data.success) {
             // Registration successful, you can handle the success scenario here
             Alert.alert('Success', data.data.message);
             // Navigate to another screen or perform any action you need
-            navigation.navigate('Login'); // replace 'Home' with the screen you want to navigate to
+            navigation.navigate('Verify', { email: email }); // replace 'Home' with the screen you want to navigate to
           } else {
             // Handle the case when registration fails
-            Alert.alert('Error', data.data.message);
+            Alert.alert('Error', data.error.message);
           }
         } catch (error) {
           // Handle any network or server errors
@@ -56,6 +57,7 @@ export default function SignUpScreen() {
       };
 
   return (
+    <ScrollView>
     <View className="flex-1 bg-white" style={{backgroundColor: themeColors.bg}}>
       <SafeAreaView className="flex">
         <View className="flex-row justify-start">
@@ -149,5 +151,6 @@ export default function SignUpScreen() {
         </View>
       </View>
     </View>
+    </ScrollView>
   )
 }

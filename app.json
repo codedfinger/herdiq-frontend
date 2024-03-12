@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "app-ui",
+    "name": "herdiq",
     "slug": "app-ui",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.alexswiss.appui"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "81db96d0-59dc-462c-ba4b-bc38bc529563"
+      }
     }
   }
 }

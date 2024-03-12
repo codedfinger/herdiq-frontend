@@ -18,7 +18,7 @@ const GoatScreen = () => {
     { name: 'goat', type: 'MaterialIcon', label: 'GoatAnimals', title: 'Animals' },
     { name: 'pets', type: 'MaterialIcon', label: 'GoatBreed', title: 'Breed' },
     { name: 'house-siding', type: 'MaterialIcon', label: 'GoatShed', title: 'Shed' },
-    { name: 'local-hospital', type: 'MaterialIcon', label: 'GoatVaccine', title: 'Vaccine' },
+    { name: 'local-hospital', type: 'MaterialIcon', label: 'Vaccine', title: 'Vaccine' },
     { name: 'dna', type: 'MaterialCommunityIcon', label: 'GoatProgeny', title: 'Progeny' },
     { name: 'gender-male-female', type: 'MaterialCommunityIcon', label: 'GoatBreeding', title: 'Breeding' },
     { name: 'loyalty', type: 'MaterialIcon', label: 'Tags', title: 'Tags' },
